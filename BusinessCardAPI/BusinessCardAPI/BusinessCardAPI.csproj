@@ -15,4 +15,8 @@
     <ProjectReference Include="..\BusinessCard.Infra\BusinessCard.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
