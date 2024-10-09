@@ -1,5 +1,7 @@
 using BusinessCard.Core.Common;
+using BusinessCard.Core.Repository;
 using BusinessCard.Infra.Common;
+using BusinessCard.Infra.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbContext, DbContext>();
+builder.Services.AddScoped<IBusinessCardRepository, BusinessCardRepository>();
+
 
 var app = builder.Build();
 
