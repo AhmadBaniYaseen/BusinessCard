@@ -4,3 +4,5 @@
 
 /BusinessCardAPI/.vs/BusinessCardAPI
 /BusinessCardAPI/BusinessCardAPI/obj
+/BusinessCardAPI/BusinessCard.Infra/obj
+/BusinessCardAPI/BusinessCard.Core/obj
