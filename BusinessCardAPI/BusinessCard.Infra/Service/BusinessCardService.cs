@@ -18,34 +18,34 @@ namespace BusinessCard.Infra.Service
             _businessCardRepository = businessCardRepository;
         }
 
-        public void CreateBusinessCard(CreateBusinessCardInput input)
+        public async Task CreateBusinessCard(CreateBusinessCardInput input)
         {
-            _businessCardRepository.CreateBusinessCard(input);
+            await _businessCardRepository.CreateBusinessCard(input);
         }
 
-        public void DeleteBusinessCard(DeleteBusinessCard input)
+        public async Task DeleteBusinessCard(DeleteBusinessCard input)
         {
-            _businessCardRepository.DeleteBusinessCard(input);
+            await _businessCardRepository.DeleteBusinessCard(input);
         }
 
-        public async Task< List<Core.Data.BusinessCard>> GetAllBusinessCard()
+        public async Task<List<Core.Data.BusinessCard>> GetAllBusinessCard()
         {
-           return await _businessCardRepository.GetAllBusinessCard();
+            return await _businessCardRepository.GetAllBusinessCard();
         }
 
-        public Core.Data.BusinessCard GetByBusinessCardId(GetBusinessCardById input)
+        public async Task<Core.Data.BusinessCard> GetByBusinessCardId(GetBusinessCardById input)
         {
-         return  _businessCardRepository.GetByBusinessCardId(input);
+            return await _businessCardRepository.GetByBusinessCardId(input);
         }
 
-        public List<BusinessCard.Core.Data.BusinessCard> GetFilterBusinessCard(Filter input)
+        public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard(Filter input)
         {
-            return _businessCardRepository.GetFilterBusinessCard(input);
+            return await _businessCardRepository.GetFilterBusinessCard(input);
         }
 
-        public void UpdateBusinessCard(UpdateBusinessCard input)
+        public async Task UpdateBusinessCard(UpdateBusinessCard input)
         {
-           _businessCardRepository.UpdateBusinessCard(input);
+            await _businessCardRepository.UpdateBusinessCard(input);
         }
     }
 }

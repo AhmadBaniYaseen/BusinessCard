@@ -20,13 +20,13 @@ namespace BusinessCard.Infra.Repository
         {
             this._dbContext = dBContext;
         }
-        public async Task< List<BusinessCard.Core.Data.BusinessCard>> GetAllBusinessCard()
+        public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetAllBusinessCard()
         {
             var result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("GetAllBusinessCard", commandType: CommandType.StoredProcedure);
             return result.ToList();
         }
         #region :: CreateBusinessCard
-        public void CreateBusinessCard(CreateBusinessCardInput input)
+        public async Task CreateBusinessCard(CreateBusinessCardInput input)
         {
             var p = new DynamicParameters();
             p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
@@ -37,20 +37,20 @@ namespace BusinessCard.Infra.Repository
             p.Add("Address", input.Address, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Photo", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            _dbContext.Connection.Execute("CREATEBusinessCard", p, commandType: CommandType.StoredProcedure);
+            await _dbContext.Connection.ExecuteAsync("CREATEBusinessCard", p, commandType: CommandType.StoredProcedure);
         }
         #endregion
 
 
 
-        public void DeleteBusinessCard(DeleteBusinessCard input)
+        public async Task DeleteBusinessCard(DeleteBusinessCard input)
         {
             var p = new DynamicParameters();
             p.Add("Id", input.Id, dbType: DbType.Int32, direction: ParameterDirection.Input);
-            _dbContext.Connection.Execute("DeleteBusinessCard", p, commandType: CommandType.StoredProcedure);
+            await _dbContext.Connection.ExecuteAsync("DeleteBusinessCard", p, commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateBusinessCard(UpdateBusinessCard input)
+        public async Task UpdateBusinessCard(UpdateBusinessCard input)
         {
             var p = new DynamicParameters();
             p.Add("Id", input.Id, dbType: DbType.Int32, direction: ParameterDirection.Input);
@@ -61,21 +61,21 @@ namespace BusinessCard.Infra.Repository
             p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Address", input.Address, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Photo", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
-            _dbContext.Connection.Execute("UPDATEBusinessCard", p, commandType: CommandType.StoredProcedure);
+            await _dbContext.Connection.ExecuteAsync("UPDATEBusinessCard", p, commandType: CommandType.StoredProcedure);
 
         }
 
-        public BusinessCard.Core.Data.BusinessCard GetByBusinessCardId(GetBusinessCardById input)
+        public async Task<BusinessCard.Core.Data.BusinessCard> GetByBusinessCardId(GetBusinessCardById input)
         {
             var p = new DynamicParameters();
-            p.Add("id", input.ID , dbType: DbType.Int32, direction: ParameterDirection.Input);
-            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("GetBusinessCardById", p, commandType: CommandType.StoredProcedure);
+            p.Add("id", input.ID, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("GetBusinessCardById", p, commandType: CommandType.StoredProcedure);
 
             return result.FirstOrDefault();
 
         }
 
-        public List<BusinessCard.Core.Data.BusinessCard> GetFilterBusinessCard(Filter input)
+        public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard(Filter input)
         {
             var p = new DynamicParameters();
             p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
@@ -83,7 +83,7 @@ namespace BusinessCard.Infra.Repository
             p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
-            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("FilterBusinessCard", p, commandType: CommandType.StoredProcedure);
+            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("FilterBusinessCard", p, commandType: CommandType.StoredProcedure);
             return result.ToList();
 
         }
