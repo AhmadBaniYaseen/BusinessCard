@@ -1,5 +1,6 @@
 ﻿using BusinessCard.Core.Common;
 using BusinessCard.Core.Data;
+using BusinessCard.Core.DTO;
 using BusinessCard.Core.Repository;
 using Dapper;
 using System;
@@ -19,22 +20,22 @@ namespace BusinessCard.Infra.Repository
         {
             this._dbContext = dBContext;
         }
-        public List<BusinessCard.Core.Data.BusinessCard> GetAllBusinessCard()
+        public async Task< List<BusinessCard.Core.Data.BusinessCard>> GetAllBusinessCard()
         {
-            var result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("GetAllBusinessCard", commandType: CommandType.StoredProcedure);
+            var result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("GetAllBusinessCard", commandType: CommandType.StoredProcedure);
             return result.ToList();
         }
         #region :: CreateBusinessCard
-        public void CreateBusinessCard(BusinessCard.Core.Data.BusinessCard businessCard)
+        public void CreateBusinessCard(CreateBusinessCardInput input)
         {
             var p = new DynamicParameters();
-            p.Add("Name", businessCard.Name, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Gender", businessCard.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("DateOfBirth", businessCard.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
-            p.Add("Email", businessCard.Email, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Phone", businessCard.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Address", businessCard.Address, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Photo", businessCard.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("DateOfBirth", input.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
+            p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Address", input.Address, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Photo", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
 
             _dbContext.Connection.Execute("CREATEBusinessCard", p, commandType: CommandType.StoredProcedure);
         }
@@ -42,48 +43,48 @@ namespace BusinessCard.Infra.Repository
 
 
 
-        public void DeleteBusinessCard(int id)
+        public void DeleteBusinessCard(DeleteBusinessCard input)
         {
             var p = new DynamicParameters();
-            p.Add("Id", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            p.Add("Id", input.Id, dbType: DbType.Int32, direction: ParameterDirection.Input);
             _dbContext.Connection.Execute("DeleteBusinessCard", p, commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateBusinessCard(BusinessCard.Core.Data.BusinessCard businessCard)
+        public void UpdateBusinessCard(UpdateBusinessCard input)
         {
             var p = new DynamicParameters();
-            p.Add("Id", businessCard.Id, dbType: DbType.Int32, direction: ParameterDirection.Input);
-            p.Add("Name", businessCard.Name, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Gender", businessCard.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("DateOfBirth", businessCard.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
-            p.Add("Email", businessCard.Email, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Phone", businessCard.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Address", businessCard.Address, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Photo", businessCard.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Id", input.Id, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("DateOfBirth", input.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
+            p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Address", input.Address, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Photo", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
             _dbContext.Connection.Execute("UPDATEBusinessCard", p, commandType: CommandType.StoredProcedure);
 
         }
 
-        public BusinessCard.Core.Data.BusinessCard GetByBusinessCardId(int id)
+        public BusinessCard.Core.Data.BusinessCard GetByBusinessCardId(GetBusinessCardById input)
         {
             var p = new DynamicParameters();
-            p.Add("id", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            p.Add("id", input.ID , dbType: DbType.Int32, direction: ParameterDirection.Input);
             IEnumerable<BusinessCard.Core.Data.BusinessCard> result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("GetBusinessCardById", p, commandType: CommandType.StoredProcedure);
 
             return result.FirstOrDefault();
 
         }
 
-        public BusinessCard.Core.Data.BusinessCard GetFilterBusinessCard(string name, DateOnly DateOfBirth, string Phone, string Gender, string Email)
+        public List<BusinessCard.Core.Data.BusinessCard> GetFilterBusinessCard(Filter input)
         {
             var p = new DynamicParameters();
-            p.Add("Name", name, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("DateOfBirth", DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
-            p.Add("Phone", Phone, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Gender", Gender, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Email", Email, dbType: DbType.String, direction: ParameterDirection.Input);
-            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("User_Package.GetUserById", p, commandType: CommandType.StoredProcedure);
-            return result.FirstOrDefault();
+            p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("DateOfBirth", input.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
+            p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = _dbContext.Connection.Query<BusinessCard.Core.Data.BusinessCard>("FilterBusinessCard", p, commandType: CommandType.StoredProcedure);
+            return result.ToList();
 
         }
 

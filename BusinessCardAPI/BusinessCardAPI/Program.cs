@@ -1,7 +1,9 @@
 using BusinessCard.Core.Common;
 using BusinessCard.Core.Repository;
+using BusinessCard.Core.Service;
 using BusinessCard.Infra.Common;
 using BusinessCard.Infra.Repository;
+using BusinessCard.Infra.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

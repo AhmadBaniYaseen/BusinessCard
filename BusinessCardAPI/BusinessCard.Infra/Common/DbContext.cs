@@ -25,7 +25,7 @@ namespace BusinessCard.Infra.Common
             {
                 if (_connection == null)
                 {
-                    _connection = new SqlConnection(_configuration["ConnectionStrings:DBConnectionString"]);
+                    _connection = new SqlConnection(_configuration["ConnectionStrings:Connection"]);
 
                     _connection.Open();
                 }

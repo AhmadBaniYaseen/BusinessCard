@@ -1,4 +1,6 @@
-﻿using BusinessCard.Core.Service;
+﻿using BusinessCard.Core.Data;
+using BusinessCard.Core.DTO;
+using BusinessCard.Core.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,47 +12,51 @@ namespace BusinessCardAPI.Controllers
     {
         private readonly IBusinessCardService _businessCardService;
 
-        public BusinessCardController(IBusinessCardService businessCardService)
+        public  BusinessCardController(IBusinessCardService businessCardService)
         {
             _businessCardService = businessCardService;
         }
-        [HttpGet]
-        public List<BusinessCard.Core.Data.BusinessCard> GetAllBusinessCard()
+        [HttpPost]
+        [Route("GetAllBusinessCard")]
+        [ProducesResponseType(typeof(List<GetALLBusinessCard>), 200)] //عشان اعرف شكل الداتا كيف راجعه 
+        public async Task<IActionResult>  GetAllBusinessCard()
         {
-            return _businessCardService.GetAllBusinessCard();
+            return Ok (await _businessCardService.GetAllBusinessCard());
         }
 
         [HttpPost]
-        public void CreateBusinessCard(BusinessCard.Core.Data.BusinessCard businessCardService)
+        [Route("CreateBusinessCard")]
+        public void CreateBusinessCard([FromBody] CreateBusinessCardInput input)
         {
-            _businessCardService.CreateBusinessCard(businessCardService);
+            _businessCardService.CreateBusinessCard(input);
         }
 
-        [HttpDelete]
-        [Route("Delete/{id}")]
-        public void DeleteBusinessCard(int id)
+        [HttpPost]
+        [Route("Delete")]
+        public void DeleteBusinessCard([FromBody] DeleteBusinessCard input)
         {
-            _businessCardService.DeleteBusinessCard(id);
+            _businessCardService.DeleteBusinessCard(input);
         }
 
-        [HttpPut]
-        public void UpdateBusinessCard(BusinessCard.Core.Data.BusinessCard businessCardService)
+        [HttpPost]
+        [Route("UpdateBusinessCard")]
+        public void UpdateBusinessCard([FromBody] UpdateBusinessCard input)
         {
-            _businessCardService.UpdateBusinessCard(businessCardService);
+            _businessCardService.UpdateBusinessCard(input);
         }
 
-        [HttpGet]
-        [Route("GetById/{id}")]
-        public BusinessCard.Core.Data.BusinessCard GetByBusinessCardId(int id)
+        [HttpPost] 
+        [Route("GetById")]
+        public BusinessCard.Core.Data.BusinessCard GetByBusinessCardId([FromForm] GetBusinessCardById input)
         {
-            return _businessCardService.GetByBusinessCardId(id);
+            return _businessCardService.GetByBusinessCardId(input);
         }
 
-        [HttpGet]
-        [Route("GetFilterBusinessCard/{name}/{DateOfBirth}/{Phone}/{Gender}/{Email}")]
-        public BusinessCard.Core.Data.BusinessCard GetFilterBusinessCard(string name, DateOnly DateOfBirth, string Phone, string Gender, string Email)
+        [HttpPost]
+        [Route("GetFilterBusinessCard")]
+        public List<BusinessCard.Core.Data.BusinessCard> GetFilterBusinessCard([FromForm] Filter input)
         {
-            return _businessCardService.GetFilterBusinessCard(name,  DateOfBirth,  Phone,  Gender,  Email);
+            return _businessCardService.GetFilterBusinessCard(input);
         }
 
     }
