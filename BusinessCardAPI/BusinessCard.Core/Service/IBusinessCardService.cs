@@ -10,11 +10,11 @@ namespace BusinessCard.Core.Service
     public interface IBusinessCardService
     {
 
-       Task<List<BusinessCard.Core.Data.BusinessCard>>  GetAllBusinessCard();
-        void CreateBusinessCard(CreateBusinessCardInput input);
-        void DeleteBusinessCard(DeleteBusinessCard input);
-        public void UpdateBusinessCard(UpdateBusinessCard input);
-        BusinessCard.Core.Data.BusinessCard GetByBusinessCardId(GetBusinessCardById input);
-        List<BusinessCard.Core.Data.BusinessCard> GetFilterBusinessCard(Filter input);
+        Task<List<BusinessCard.Core.Data.BusinessCard>> GetAllBusinessCard();
+        Task CreateBusinessCard(CreateBusinessCardInput input);
+        Task DeleteBusinessCard(DeleteBusinessCard input);
+        Task UpdateBusinessCard(UpdateBusinessCard input);
+        Task<BusinessCard.Core.Data.BusinessCard> GetByBusinessCardId(GetBusinessCardById input);
+        Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard(Filter input);
     }
 }
