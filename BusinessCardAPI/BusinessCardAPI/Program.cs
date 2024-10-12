@@ -13,7 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbContext, DbContext>();
 builder.Services.AddScoped<IBusinessCardRepository, BusinessCardRepository>();
+builder.Services.AddScoped<IBusinessCardService, BusinessCardService>(); 
 
+
+ 
 
 var app = builder.Build();
 
