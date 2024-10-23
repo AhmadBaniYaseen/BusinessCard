@@ -35,7 +35,7 @@ namespace BusinessCard.Infra.Repository
             p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
             p.Add("Address", input.Address, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Photo", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Photo", input.Photo, dbType: DbType.String, direction: ParameterDirection.Input);
 
             await _dbContext.Connection.ExecuteAsync("CREATEBusinessCard", p, commandType: CommandType.StoredProcedure);
         }
@@ -77,14 +77,23 @@ namespace BusinessCard.Infra.Repository
 
         public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard(Filter input)
         {
-            var p = new DynamicParameters();
-            p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("DateOfBirth", input.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
-            p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
-            IEnumerable<BusinessCard.Core.Data.BusinessCard> result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("FilterBusinessCard", p, commandType: CommandType.StoredProcedure);
-            return result.ToList();
+         
+            try
+            {
+                var p = new DynamicParameters();
+                p.Add("Name", input.Name, dbType: DbType.String, direction: ParameterDirection.Input);
+                p.Add("DateOfBirth", input.DateOfBirth, dbType: DbType.Date, direction: ParameterDirection.Input);
+                p.Add("Phone", input.Phone, dbType: DbType.String, direction: ParameterDirection.Input);
+                p.Add("Gender", input.Gender, dbType: DbType.String, direction: ParameterDirection.Input);
+                p.Add("Email", input.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+                IEnumerable<BusinessCard.Core.Data.BusinessCard> result = await _dbContext.Connection.QueryAsync<BusinessCard.Core.Data.BusinessCard>("FilterBusinessCard", p, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+            catch(Exception ex)
+            {
+                return default;
+            }
+
 
         }
 

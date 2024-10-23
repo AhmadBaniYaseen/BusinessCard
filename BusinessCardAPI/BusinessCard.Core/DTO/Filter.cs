@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessCard.Core.DTO
 {
-    public record Filter (string? Name, DateTime? DateOfBirth, string? Phone, string? Gender, string? Email)
+    public record Filter (DateTime? DateOfBirth, string? Gender, string? Email, string? Phone, string? Name)
     {
+
     }
+ 
 }
