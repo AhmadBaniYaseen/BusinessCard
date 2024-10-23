@@ -1,13 +1,11 @@
-﻿using BusinessCard.Core.Data;
-using BusinessCard.Core.DTO;
+﻿using BusinessCard.Core.DTO;
 using BusinessCard.Core.Service;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 
 namespace BusinessCardAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/business-card")]
     [ApiController]
     public class BusinessCardController : ControllerBase
     {
@@ -19,7 +17,7 @@ namespace BusinessCardAPI.Controllers
         }
         [HttpPost]
         [Route("GetAllBusinessCard")]
-        [ProducesResponseType(typeof(List<GetALLBusinessCard>), 200)] //عشان اعرف شكل الداتا كيف راجعه 
+        [ProducesResponseType(typeof(List<GetALLBusinessCard>), 200)] 
         public async Task<IActionResult> GetAllBusinessCard()
         {
             return Ok(await _businessCardService.GetAllBusinessCard());
@@ -33,7 +31,7 @@ namespace BusinessCardAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Delete")]
+        [Route("DeleteCard")]
         public async Task DeleteBusinessCard([FromBody] DeleteBusinessCard input)
         {
             await _businessCardService.DeleteBusinessCard(input);
@@ -55,7 +53,7 @@ namespace BusinessCardAPI.Controllers
 
         [HttpPost]
         [Route("GetFilterBusinessCard")]
-        public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard([FromForm] Filter input)
+        public async Task<List<BusinessCard.Core.Data.BusinessCard>> GetFilterBusinessCard([FromBody] Filter input)
         {
             return await _businessCardService.GetFilterBusinessCard(input);
         }
@@ -64,95 +62,26 @@ namespace BusinessCardAPI.Controllers
         [Route("UploadBusinessCardFile")]
         public async Task<IActionResult> UploadBusinessCardFile(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("File is not uploaded.");
-            }
+            return Ok( await _businessCardService.UploadBusinessCardFile(file));
 
-            string extension = Path.GetExtension(file.FileName);
-            List<CreateBusinessCardInput> businessCards = new();
-
-            using (var stream = new StreamReader(file.OpenReadStream()))
-            {
-                if (extension == ".csv")
-                {
-                    businessCards = await ReadCsvFile(stream);
-                }
-                else if (extension == ".xml")
-                {
-                    businessCards = await ReadXmlFile(stream);
-                }
-                else
-                {
-                    return BadRequest("Unsupported file type. Only CSV and XML are allowed.");
-                }
-            }
-
-
-            foreach (var card in businessCards)
-            {
-                await _businessCardService.CreateBusinessCard(card);
-            }
-
-            return Ok("Business cards created successfully.");
         }
 
-
-        private async Task<List<CreateBusinessCardInput>> ReadXmlFile(StreamReader reader)
+        [HttpPost]
+        [Route("exportToCsv")] 
+        public async Task<IActionResult> ExportCsv([FromBody] BusinessCard.Core.Data.BusinessCard businessCards)
         {
-            var businessCards = new List<CreateBusinessCardInput>();
-
-
-            var xmlContent = await reader.ReadToEndAsync();
-            var xDoc = XDocument.Parse(xmlContent);
-
-
-            foreach (var element in xDoc.Descendants("BusinessCard"))
-            {
-                var businessCard = new CreateBusinessCardInput(
-                    Name: element.Element("Name")?.Value,
-                    Gender: element.Element("Gender")?.Value,
-                    DateOfBirth: DateTime.Parse(element.Element("DateOfBirth")?.Value ?? DateTime.MinValue.ToString()),
-                    Email: element.Element("Email")?.Value,
-                    Phone: element.Element("Phone")?.Value,
-                    Address: element.Element("Address")?.Value,
-                    Photo: element.Element("Photo")?.Value
-                );
-
-                businessCards.Add(businessCard);
-            }
-
-            return businessCards;
+            var result = await _businessCardService.ExportToCsv(businessCards);
+            return result;
         }
 
-
-        private async Task<List<CreateBusinessCardInput>> ReadCsvFile(StreamReader reader)
+        [HttpPost]
+        [Route("exportToXml")]
+        public async Task<IActionResult> ExportXml([FromBody] BusinessCard.Core.Data.BusinessCard businessCards)
         {
-            List<CreateBusinessCardInput> businessCards = new();
-            string line;
-
-
-            await reader.ReadLineAsync();
-
-            while ((line = await reader.ReadLineAsync()) != null)
-            {
-                var values = line.Split(',');
-
-                var businessCard = new CreateBusinessCardInput(
-                    Name: values[0],
-                    Gender: values[1],
-                    DateOfBirth: DateTime.Parse(values[2]),
-                    Email: values[3],
-                    Phone: values[4],
-                    Address: values[5],
-                    Photo: values[6]
-                );
-
-                businessCards.Add(businessCard);
-            }
-
-            return businessCards;
+            var result = await _businessCardService.ExportToXml(businessCards);
+            return result;
         }
+
 
     }
 }

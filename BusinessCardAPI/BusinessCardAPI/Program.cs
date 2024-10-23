@@ -15,13 +15,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbContext, DbContext>();
 builder.Services.AddScoped<IBusinessCardRepository, BusinessCardRepository>();
-builder.Services.AddScoped<IBusinessCardService, BusinessCardService>(); 
+builder.Services.AddScoped<IBusinessCardService, BusinessCardService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200") // Allow this origin
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
- 
 
 var app = builder.Build();
 
+
+app.UseRouting();
+app.UseCors("AllowSpecificOrigin");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
