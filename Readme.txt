@@ -28,4 +28,12 @@ Development Tools
 2- Node.js & npm: For managing frontend dependencies and Angular CLI.
 3- SQL Server Management Studio (SSMS): For database management.
 
+Unit Testing file
 
+Unit tests are implemented to ensure the stability and reliability of the BusinessCard application. The following are covered:
+Backend Testing file name (BusinessCardAPIUnitTest):
+1-Unit tests for the ASP.NET Core 8 backend ensure that business card creation, deletion, and file upload features work as expected.
+2-Mock dependencies are used to isolate components for testing in the Onion architecture.
+
+Backup file name(database) :
+has a database backup .
